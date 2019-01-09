@@ -1,0 +1,110 @@
+<?php
+function hp_joined_events_init() {
+  drupal_add_js(drupal_get_path('module', 'hp_joined_events') . '/js/inline-place2book.js');
+}
+/*
+ * Update insert
+ */
+function hp_joined_events_node_insert($node) {
+    if ($node->type == "events") {
+        if ($node->place2book['maintain_copy'] == 1) {
+            //check if parent has place2book ?!
+            perform_p2b_op_on_inline_hold_tider($node);
+            
+        }
+    }
+}
+/*
+ * Update
+ */
+function hp_joined_events_node_update($node) {
+    if ($node->type == "events") {
+        if ($node->place2book['maintain_copy'] == 1) {
+            //check if parent has place2book ?!
+            perform_p2b_op_on_inline_hold_tider($node);
+        }
+    }
+}
+/*
+ * Delete
+ */
+function hp_joined_events_node_delete($node) {
+    if ($node->type == "events") {
+        if ($node->place2book['maintain_copy'] == 1) {
+            //check if parent has place2book ?!
+            perform_p2b_op_on_inline_hold_tider($node,true);
+        }
+    }
+}
+/*
+ *  Pre save
+ */
+function hp_joined_events_node_presave($node) {
+    
+}
+/*
+ * Get main node where we are referenced from.
+ */
+function perform_p2b_op_on_inline_hold_tider($node,$delete = false)
+{
+   $inline_hold_tider = array();
+   foreach($node->field_hold_tider['und'] as $index => $id)
+   {
+       array_push($inline_hold_tider,node_load($id['target_id']));
+   }
+   foreach($inline_hold_tider as $inline_hold_node)
+   {
+       //apply place2book
+       $copied_data = clone $inline_hold_node;
+       $copied_data->title = $node->title . " - " . $inline_hold_node->title;
+       $copied_data->field_lead = $node->field_lead;
+       $copied_data->body = $node->body;
+       //$copied_data->field_rum_og_sted = $node->field_rum_og_sted;
+       $copied_data->field_location = $node->field_location;
+       $copied_data->capacity = $node->capacity;
+       $copied_data->field_price = $node->field_price;
+       $copied_data->field_standard_billet_navn = $node->field_standard_billet_navn;
+       $copied_data->field_dato = $node->field_dato;
+       $copied_data->field_sale_date = $node->field_sale_date;
+       $copied_data->place2book = $node->place2book;
+       $copied_data->field_target = $node->field_target;
+       $copied_data->field_event_category = $node->field_event_category;
+       $copied_data->field_title_image_1200_px_ = $node->field_title_image_1200_px_;
+       $copied_data->publish_on = $node->publish_on;
+       if(!isset($inline_hold_node->field_place2book_tickets['und']['0']['value']))
+       {
+            $place2book_id = place2book_event_op('insert',$copied_data);
+            $inline_hold_node->field_place2book_tickets['und']['0']['value']= $place2book_id;
+       }
+       else if($delete != true)
+       {
+            $place2book_id = place2book_event_op('update',$copied_data);
+            $inline_hold_node->field_place2book_tickets['und']['0']['value']= $place2book_id ;
+       }
+       else if($delete == true)
+       {
+            $place2book_id = place2book_event_op('delete',$copied_data,$inline_hold_node->field_place2book_tickets['und']['0']['value']);
+            $inline_hold_node->field_place2book_tickets['und']['0']['value']= null;
+       }
+       //drupal_write_record('node', $inline_hold_node, 'nid');
+       $function = "field_attach_update";
+       $function('node', $inline_hold_node);
+   }
+}
+/*
+ * Make the dispay of the joined inline events more nice
+ */
+function hp_joined_events_inline_entity_form_table_fields_alter(&$fields, $context) {
+  //Determine the bundle and entity type from $context
+  if($context["parent_bundle"] == "events" && $context["field_name"] == "field_hold_tider")
+  {
+      //add any fields you need to the $fields array
+        $fields['field_place2book_tickets'] = array(
+          'type' => 'field',
+          'label' => t('Place2Book'),
+          'weight' => 2
+        );
+        unset($fields['status']);
+  }
+
+}
