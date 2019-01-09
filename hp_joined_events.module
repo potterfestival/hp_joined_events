@@ -10,7 +10,6 @@ function hp_joined_events_node_insert($node) {
         if ($node->place2book['maintain_copy'] == 1) {
             //check if parent has place2book ?!
             perform_p2b_op_on_inline_hold_tider($node);
-            
         }
     }
 }
@@ -23,6 +22,11 @@ function hp_joined_events_node_update($node) {
             //check if parent has place2book ?!
             perform_p2b_op_on_inline_hold_tider($node);
         }
+        else if($node->original->place2book['maintain_copy'] == 1)
+        {
+            //we no longer use p2b ..delete
+            perform_p2b_op_on_inline_hold_tider($node,true);
+        }
     }
 }
 /*
@@ -30,10 +34,10 @@ function hp_joined_events_node_update($node) {
  */
 function hp_joined_events_node_delete($node) {
     if ($node->type == "events") {
-        if ($node->place2book['maintain_copy'] == 1) {
-            //check if parent has place2book ?!
+        /*
+         * We are deleting an events node...delete place2book
+         */
             perform_p2b_op_on_inline_hold_tider($node,true);
-        }
     }
 }
 /*
@@ -74,12 +78,18 @@ function perform_p2b_op_on_inline_hold_tider($node,$delete = false)
        if(!isset($inline_hold_node->field_place2book_tickets['und']['0']['value']))
        {
             $place2book_id = place2book_event_op('insert',$copied_data);
-            $inline_hold_node->field_place2book_tickets['und']['0']['value']= $place2book_id;
+            if($place2book_id != null)
+            {
+                $inline_hold_node->field_place2book_tickets['und']['0']['value']= $place2book_id;
+            }
        }
        else if($delete != true)
        {
-            $place2book_id = place2book_event_op('update',$copied_data);
-            $inline_hold_node->field_place2book_tickets['und']['0']['value']= $place2book_id ;
+            $place2book_id = place2book_event_op('update',$copied_data,$inline_hold_node->field_place2book_tickets['und']['0']['value']);
+            if($place2book_id != null)
+            {
+                $inline_hold_node->field_place2book_tickets['und']['0']['value']= $place2book_id ;
+            }
        }
        else if($delete == true)
        {
