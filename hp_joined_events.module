@@ -76,7 +76,7 @@ function hp_joined_events_node_view_alter(&$build)
     // Change its weight.
     if(sizeof($build['field_hold_tider']['#items']) != 0)
     {
-       unset($build['field_place2book_tickets']);
+       $build['field_place2book_tickets']['#access'] = false;
     }
   }
 }
