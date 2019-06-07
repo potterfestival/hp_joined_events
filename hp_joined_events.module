@@ -47,6 +47,14 @@ function hp_joined_events_node_presave($node) {
     
 }
 /*
+ * Clone alter
+ */
+function hp_joined_events_clone_node_alter($node, $context)
+{
+    //clear the inline teams for this new node.
+    $node->field_hold_tider = null;
+}
+/*
  * Get main node where we are referenced from.
  */
 function perform_p2b_op_on_inline_hold_tider($node,$delete = false)
