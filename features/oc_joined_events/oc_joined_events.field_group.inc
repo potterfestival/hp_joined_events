@@ -21,16 +21,15 @@ function oc_joined_events_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Place2book ',
-    'weight' => '7',
+    'weight' => '8',
     'children' => array(
-      0 => 'field_sale_date',
-      1 => 'field_place2book_tickets',
-      2 => 'field_standard_billet_navn',
-      3 => 'field_location',
-      4 => 'field_event_category',
-      5 => 'field_title_image_1200_px_',
-      6 => 'field_target',
-      7 => 'field_lead',
+      0 => 'field_place2book_tickets',
+      1 => 'field_standard_billet_navn',
+      2 => 'field_location',
+      3 => 'field_event_category',
+      4 => 'field_title_image_1200_px_',
+      5 => 'field_target',
+      6 => 'field_lead',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(

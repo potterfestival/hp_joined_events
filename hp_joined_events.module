@@ -55,6 +55,20 @@ function hp_joined_events_clone_node_alter($node, $context)
     $node->field_hold_tider = null;
 }
 /*
+ * Node view alter
+ */
+function hp_joined_events_node_view_alter(&$build)
+{
+   if ($build['#bundle'] == 'events' && $build['#view_mode'] == 'full' && isset($build['field_hold_tider'])) {
+
+    // Change its weight.
+    if(sizeof($build['field_hold_tider']['#items']) != 0)
+    {
+       unset($build['field_place2book_tickets']);
+    }
+  }
+}
+/*
  * Get main node where we are referenced from.
  */
 function perform_p2b_op_on_inline_hold_tider($node,$delete = false)
