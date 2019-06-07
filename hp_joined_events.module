@@ -37,7 +37,19 @@ function hp_joined_events_node_delete($node) {
         /*
          * We are deleting an events node...delete place2book
          */
+        if(!isset($node->place2book))
+        {
+            $node->place2book = place2book_settings($node->nid);
+        }
+        if(isset($node->field_hold_tider['und']))
+        {
             perform_p2b_op_on_inline_hold_tider($node,true);
+            
+            foreach($node->field_hold_tider['und'] as $tid)
+            {
+                node_delete($tid['target_id']);
+            }
+        }
     }
 }
 /*
@@ -97,7 +109,7 @@ function perform_p2b_op_on_inline_hold_tider($node,$delete = false)
        $copied_data->field_event_category = $node->field_event_category;
        $copied_data->field_title_image_1200_px_ = $node->field_title_image_1200_px_;
        $copied_data->publish_on = $node->publish_on;
-       if(!isset($inline_hold_node->field_place2book_tickets['und']['0']['value']))
+       if(!isset($inline_hold_node->field_place2book_tickets['und']['0']['value']) && $copied_data->place2book['maintain_copy'] = 1 && $copied_data->place2book['place2book_id'] != -1)
        {
             $place2book_id = place2book_event_op('insert',$copied_data);
             if($place2book_id != null)
@@ -105,7 +117,7 @@ function perform_p2b_op_on_inline_hold_tider($node,$delete = false)
                 $inline_hold_node->field_place2book_tickets['und']['0']['value']= $place2book_id;
             }
        }
-       else if($delete != true)
+       else if($delete != true && $copied_data->place2book['place2book_id'] != -1)
        {
             $place2book_id = place2book_event_op('update',$copied_data,$inline_hold_node->field_place2book_tickets['und']['0']['value']);
             if($place2book_id != null)
@@ -113,7 +125,7 @@ function perform_p2b_op_on_inline_hold_tider($node,$delete = false)
                 $inline_hold_node->field_place2book_tickets['und']['0']['value']= $place2book_id ;
             }
        }
-       else if($delete == true)
+       else if($delete == true && $copied_data->place2book['maintain_copy'] == 1)
        {
             $place2book_id = place2book_event_op('delete',$copied_data,$inline_hold_node->field_place2book_tickets['und']['0']['value']);
             $inline_hold_node->field_place2book_tickets['und']['0']['value']= null;

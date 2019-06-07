@@ -4,3 +4,4 @@ core = 7.x
 
 dependencies[] = inline_entity_form
 dependencies[] = ding_place2book
+dependencies[] = oc_joined_events
