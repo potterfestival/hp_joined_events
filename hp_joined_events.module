@@ -81,6 +81,56 @@ function hp_joined_events_node_view_alter(&$build)
   }
 }
 /*
+ * Alter views
+ */
+function hp_joined_events_views_post_execute(&$view) {
+    if($view->name == "event_termer")
+    {
+        foreach($view->result as $index => $result)
+               {
+                   $node = node_load($result->nid); //can get heavy i guess..
+                   if(isset($node->field_hold_tider) && sizeof($node->field_hold_tider) != 0)
+                   {
+                       foreach($node->field_hold_tider['und'] as $team)
+                       {
+                           //find first team that is not over.
+                           $hold = node_load($team['target_id']);
+                           $date = date("d/m/Y"); //get current date.
+                           $team_date = !isset($hold->field_dato['und'][0]['value2']) ? $hold->field_dato['und'][0]['value'] : $hold->field_dato['und'][0]['value2'];
+                           $team_end_date = date('d/m/Y', strtotime($team_date));
+
+                           if($team_end_date >= $date)
+                           {
+                               //set the main node to the new team dates.
+                               $view->result[$index]->field_field_dato[0]['raw']['value'] = $hold->field_dato['und'][0]['value'];
+                               if(isset($view->result[$index]->field_field_dato[0]['raw']['value2']) && isset($hold->field_dato['und'][0]['value2']))
+                               {
+                                   $view->result[$index]->field_field_dato[0]['raw']['value2'] = $hold->field_dato['und'][0]['value2'];
+                               }
+                               else
+                               {
+                                   unset($view->result[$index]->field_field_dato[0]['raw']['value2']);
+                               }
+                                $view->result[$index]->field_field_dato[0]['rendered']['#markup'] = "<div>Flere tider</div>";
+                           }
+
+                       }
+                   }
+               }
+        uasort($view->result,'sort_team_view_results');
+    
+    }
+}
+function sort_team_view_results($a, $b)
+{
+    $date = date('Y-m-d H:i:s', strtotime($a->field_field_ding_event_date[0]['raw']['value']));
+    $date1 = date('Y-m-d H:i:s', strtotime($b->field_field_ding_event_date[0]['raw']['value']));
+    if ($date == $date1) {
+        return 0;
+    }
+    return ($date < $date1) ? -1 : 1;
+}
+/*
  * Get main node where we are referenced from.
  */
 function perform_p2b_op_on_inline_hold_tider($node,$delete = false)
