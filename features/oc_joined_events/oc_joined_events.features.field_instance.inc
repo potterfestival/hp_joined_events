@@ -265,52 +265,6 @@ function oc_joined_events_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-inline_hold_tider-field_price'.
-  $field_instances['node-inline_hold_tider-field_price'] = array(
-    'bundle' => 'inline_hold_tider',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'number',
-        'settings' => array(
-          'decimal_separator' => '.',
-          'prefix_suffix' => TRUE,
-          'scale' => 0,
-          'thousand_separator' => '',
-        ),
-        'type' => 'number_integer',
-        'weight' => 1,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 10,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_price',
-    'label' => 'Pris (0 = Kræver ikke tilmelding. Evt. Galleonspris ses ved aktiviten, blank felt = Gratis m. tilmelding)',
-    'required' => 0,
-    'settings' => array(
-      'max' => '',
-      'min' => '',
-      'prefix' => '',
-      'suffix' => '',
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'number',
-      'settings' => array(),
-      'type' => 'number',
-      'weight' => 7,
-    ),
-  );
-
   // Exported field_instance: 'node-inline_hold_tider-field_sale_date'.
   $field_instances['node-inline_hold_tider-field_sale_date'] = array(
     'bundle' => 'inline_hold_tider',
@@ -342,10 +296,10 @@ function oc_joined_events_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'field_sale_date',
     'label' => 'Salgsdato',
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
-      'default_value' => 'now',
-      'default_value2' => 'same',
+      'default_value' => 'blank',
+      'default_value2' => 'blank',
       'default_value_code' => '',
       'default_value_code2' => '',
       'user_register_form' => FALSE,
@@ -518,7 +472,6 @@ function oc_joined_events_field_default_field_instances() {
   t('Målgruppe');
   t('Navn på billettypen');
   t('Place2book Tickets');
-  t('Pris (0 = Kræver ikke tilmelding. Evt. Galleonspris ses ved aktiviten, blank felt = Gratis m. tilmelding)');
   t('Salgsdato');
   t('Start -og slut tidspunkt');
   t('hp lokationer');
