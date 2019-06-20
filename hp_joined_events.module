@@ -153,7 +153,7 @@ function perform_p2b_op_on_inline_hold_tider($node,$delete = false)
        $copied_data->field_price = $node->field_price;
        $copied_data->field_standard_billet_navn = $node->field_standard_billet_navn;
        $copied_data->field_dato = $inline_hold_node->field_dato;
-       $copied_data->field_sale_date = isset($inline_hold_node->field_sale_date) ? $node->field_sale_date : $inline_hold_node->field_sale_date;
+       $copied_data->field_sale_date = isset($inline_hold_node->field_sale_date) && sizeof($inline_hold_node->field_sale_date) != 0 ? $inline_hold_node->field_sale_date : $node->field_sale_date;
        $copied_data->place2book = $node->place2book;
        $copied_data->field_target = $node->field_target;
        $copied_data->field_event_category = $node->field_event_category;
