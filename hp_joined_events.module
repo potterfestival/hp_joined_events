@@ -148,7 +148,7 @@ function perform_p2b_op_on_inline_hold_tider($node,$delete = false)
        $copied_data->body = $node->body;
        //$copied_data->field_rum_og_sted = $node->field_rum_og_sted;
        $copied_data->field_location = $node->field_location;
-       $copied_data->capacity = $node->capacity;
+       $copied_data->capacity = isset($node->capacity) ? $node->capacity : array('und' => array('value' => 0));
        $copied_data->field_price = $node->field_price;
        $copied_data->field_standard_billet_navn = $node->field_standard_billet_navn;
        $copied_data->field_dato = $inline_hold_node->field_dato;
