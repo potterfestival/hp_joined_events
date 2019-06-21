@@ -40,11 +40,10 @@ function hp_joined_events_node_delete($node) {
         if(!isset($node->place2book))
         {
             $node->place2book = place2book_settings($node->nid);
-        }
+        }      
         if(isset($node->field_hold_tider['und']))
         {
-            perform_p2b_op_on_inline_hold_tider($node,true);
-            
+             perform_p2b_op_on_inline_hold_tider($node,true);
             foreach($node->field_hold_tider['und'] as $tid)
             {
                 node_delete($tid['target_id']);
