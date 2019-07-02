@@ -158,7 +158,9 @@ function perform_p2b_op_on_inline_hold_tider($node,$delete = false)
        $copied_data->field_event_category = $node->field_event_category;
        $copied_data->field_title_image_1200_px_ = $node->field_title_image_1200_px_;
        $copied_data->publish_on = $node->publish_on;
-       if(!isset($inline_hold_node->field_place2book_tickets['und']['0']['value']) && $copied_data->place2book['maintain_copy'] = 1 && $copied_data->place2book['place2book_id'] != -1)
+       
+       $node_settings = place2book_settings($inline_hold_node->nid);
+       if(!isset($inline_hold_node->field_place2book_tickets['und']['0']['value']) && $copied_data->place2book['maintain_copy'] = 1 && $node_settings->place2book['place2book_id'] != -1)
        {
             $place2book_id = place2book_event_op('insert',$copied_data);
             if($place2book_id != null)
