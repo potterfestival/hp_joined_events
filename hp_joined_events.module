@@ -94,9 +94,9 @@ function hp_joined_events_views_post_execute(&$view) {
                        {
                            //find first team that is not over.
                            $hold = node_load($team['target_id']);
-                           $date = date("d/m/Y"); //get current date.
+                           $date = strtotime(date("Y-m-d H:i:s")); //get current date.
                            $team_date = !isset($hold->field_dato['und'][0]['value2']) ? $hold->field_dato['und'][0]['value'] : $hold->field_dato['und'][0]['value2'];
-                           $team_end_date = date('d/m/Y', strtotime($team_date));
+                           $team_end_date = strtotime($team_date);
 
                            if($team_end_date >= $date)
                            {
@@ -111,6 +111,7 @@ function hp_joined_events_views_post_execute(&$view) {
                                    unset($view->result[$index]->field_field_dato[0]['raw']['value2']);
                                }
                                 $view->result[$index]->field_field_dato[0]['rendered']['#markup'] = "<div>Flere tider</div>";
+                                break;
                            }
 
                        }
@@ -122,8 +123,8 @@ function hp_joined_events_views_post_execute(&$view) {
 }
 function sort_team_view_results($a, $b)
 {
-    $date = date('Y-m-d H:i:s', strtotime($a->field_field_ding_event_date[0]['raw']['value']));
-    $date1 = date('Y-m-d H:i:s', strtotime($b->field_field_ding_event_date[0]['raw']['value']));
+    $date = strtotime($a->field_field_dato[0]['raw']['value']);
+    $date1 = strtotime($b->field_field_dato[0]['raw']['value']);
     if ($date == $date1) {
         return 0;
     }
