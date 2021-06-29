@@ -97,7 +97,7 @@ function hp_joined_events_views_post_execute(&$view) {
                            $date = strtotime(date("Y-m-d H:i:s")); //get current date.
                            $team_date = !isset($hold->field_dato['und'][0]['value2']) ? $hold->field_dato['und'][0]['value'] : $hold->field_dato['und'][0]['value2'];
                            $team_end_date = strtotime($team_date);
-
+/** Show dates (pernille)
                            if($team_end_date >= $date)
                            {
                                //set the main node to the new team dates.
@@ -113,7 +113,7 @@ function hp_joined_events_views_post_execute(&$view) {
                                 $view->result[$index]->field_field_dato[0]['rendered']['#markup'] = "<div>Flere tider</div>";
                                 break;
                            }
-
+**/
                        }
                    }
                }
